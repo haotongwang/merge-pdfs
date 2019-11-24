@@ -35,7 +35,7 @@ while True:
 			for value in pdf_list:
 				merger.append(value)
 			# set path to desktop
-			desktop_path = os.path.join(os.environ['HOMEPATH'], 'Desktop')
+			desktop_path = os.path.join(os.environ['HOMEDRIVE'], os.environ['HOMEPATH'], 'Desktop')
 			output_path = os.path.join(desktop_path, 'merged.pdf')
 			# set unique output file name
 			counter = 0
