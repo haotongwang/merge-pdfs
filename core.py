@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
-# import PyPDF2 as pdf
+import os.path as path
+from PyPDF2 import PdfFileMerger
 
 sg.change_look_and_feel('DarkAmber')	# Add a touch of color
 # All the stuff inside your window.
@@ -28,7 +29,18 @@ while True:
 		pdf_list.append(values['File'])
 		index = len(pdf_list) - 1
 	elif event == 'Merge':
-		pass
+		value_list = listbox.get_list_values()
+		merger = PdfFileMerger()
+		for value in value_list:
+			merger.append(value)
+		# find appropriate file name
+		merged_name = 'merged.pdf'
+		counter = 0
+		while path.exists(merged_name):
+			counter += 1
+			merged_name = f'merged{counter}.pdf'
+		merger.write(merged_name)
+		break
 	elif index is None:
 		pass # do nothing
 	elif event == 'Up':
