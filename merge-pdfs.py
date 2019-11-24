@@ -43,7 +43,7 @@ while True:
 				counter += 1
 				output_path = os.path.join(desktop_path, f'merged{counter}.pdf')
 			merger.write(output_path)
-			sg.Popup('File successfully merged\n', 'Location: ', output_path)
+			sg.Popup('File successfully merged', 'Location: ', output_path)
 	elif index is None:
 		pass # do nothing
 	elif event == 'Up':
