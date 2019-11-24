@@ -8,7 +8,7 @@ pdf_list = []
 layout = [
 	[sg.Text('PDFs')],
 	[sg.Listbox(values=pdf_list, size=(60, 10), key='_list_', select_mode='SINGLE')],
-	[sg.Text('Controls'), sg.Button(button_text='Move Up', key='Up'), sg.Button(button_text='Move Down', key='Down'), sg.Button(button_text='Remove', key='Remove')],
+	[sg.Text('Controls'), sg.Button(button_text='Move Up', key='Up'), sg.Button(button_text='Move Down', key='Down'), sg.Button(button_text='Remove', key='Remove'), sg.Button(button_text='Clear All', key='Clear')],
 	[sg.InputText(), sg.FileBrowse(file_types=(("PDFs", "*.pdf"),), button_text='Browse', key='File'), sg.Button(button_text='Add', key='Add')],
 	[sg.Button(button_text='Merge', key='Merge'), sg.Cancel()]
 ]
@@ -20,27 +20,27 @@ while True:
 	event, values = window.read()
 	if event in (None, 'Cancel'):   # if user closes window or clicks cancel
 		break
-	print(event, values)
-	# if event == 'Add':
-	# 	pdf_list.append([sg.In(key=len(pdf_list)+1), sg.Button(button_text=u'\u2191', key='Up'), sg.Button(button_text=u'\u2193', key='Down')])
 	listbox = window['_list_']
 	index = listbox.get_indexes()[0] if len(listbox.get_indexes()) > 0 else None
 	if event == 'Add' and values['File'] != '':
 		pdf_list.append(values['File'])
 		index = len(pdf_list) - 1
+	elif event =='Clear':
+		pdf_list = []
 	elif event == 'Merge':
-		value_list = listbox.get_list_values()
-		merger = PdfFileMerger()
-		for value in value_list:
-			merger.append(value)
-		# find appropriate file name
-		merged_name = 'merged.pdf'
-		counter = 0
-		while path.exists(merged_name):
-			counter += 1
-			merged_name = f'merged{counter}.pdf'
-		merger.write(merged_name)
-		break
+		if len(pdf_list) == 0:
+			sg.Popup('No PDFs to merge', title='Warning')
+		else:
+			merger = PdfFileMerger()
+			for value in pdf_list:
+				merger.append(value)
+			# set unique file name for output
+			merged_name = 'merged.pdf'
+			counter = 0
+			while path.exists(merged_name):
+				counter += 1
+				merged_name = f'merged{counter}.pdf'
+			merger.write(merged_name)
 	elif index is None:
 		pass # do nothing
 	elif event == 'Up':
