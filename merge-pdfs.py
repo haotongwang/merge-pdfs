@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-import os.path as path
+import os
 from PyPDF2 import PdfFileMerger
 
 sg.change_look_and_feel('DarkAmber')	# Add a touch of color
@@ -34,13 +34,16 @@ while True:
 			merger = PdfFileMerger()
 			for value in pdf_list:
 				merger.append(value)
-			# set unique file name for output
-			merged_name = 'merged.pdf'
+			# set path to desktop
+			desktop_path = os.path.join(os.environ['HOMEPATH'], 'Desktop')
+			output_path = os.path.join(desktop_path, 'merged.pdf')
+			# set unique output file name
 			counter = 0
-			while path.exists(merged_name):
+			while os.path.exists(output_path):
 				counter += 1
-				merged_name = f'merged{counter}.pdf'
-			merger.write(merged_name)
+				output_path = os.path.join(desktop_path, f'merged{counter}.pdf')
+			merger.write(output_path)
+			sg.Popup('File successfully merged\n', 'Location: ', output_path)
 	elif index is None:
 		pass # do nothing
 	elif event == 'Up':
